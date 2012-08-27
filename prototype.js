@@ -81,6 +81,8 @@ Game = {
 		self.render();
 	},
 	init: function() {
+		this.life = [];
+
 		var prey = new Species();
 		prey.population = 100;
 		prey.growthRate = 0.02;
