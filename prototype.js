@@ -7,32 +7,10 @@ function Species() {
 	this.alive = []
 };
 
-var rabbit = new Species();
-var fox = new Species();
-var lion = new Species();
 var chart;
 
 Game = {
-	firstrun: true,
 	life: [],
-	cycleCount: 100,
-	boomCycle: 0,
-	cycle: function() {
-		rabbit.population = (rabbit.population + ((rabbit.population * rabbit.growthRate) * Math.random(1, 1.1))) - (rabbit.population * rabbit.depletion) - (fox.population * fox.growthRate * rabbit.population);
-		rabbit.alive.push(parseInt(Math.max(2, rabbit.population)));
-
-		fox.population = fox.population + (fox.population * fox.growthRate * rabbit.population) - (fox.population * fox.depletion) - (fox.population * lion.population * lion.growthRate);
-		fox.alive.push(parseInt(Math.max(2, fox.population)));
-
-		lion.population = lion.population + (lion.population * lion.growthRate * fox.population) - (lion.population * lion.depletion);
-		lion.alive.push(parseInt(Math.max(2, lion.population)));
-	},
-	dynamicCycle: function() {
-		//work out overall growth rate modifier for the prey
-
-
-		//work out overall growth rate modifier for predator
-	},
 	calcPrey: function(prey) {
 		//first calculate our prey growth
 		prey.population = (prey.population + ((prey.population * prey.growthRate)) * Math.random(1, 1.1));
