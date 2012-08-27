@@ -1,0 +1,21 @@
+{
+  "name": "Predatorpreyproto",
+  "version": "0.0.0",
+  "description": "ERROR: No README.md file found!",
+  "main": "lib/prototype.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "grunt lint test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/philky/Predatorpreyproto.git"
+  },
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "grunt": "~0.3.12"
+  }
+}
