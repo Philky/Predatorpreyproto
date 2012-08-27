@@ -1,18 +1,19 @@
-function Life() {
+function Species() {
 	this.growthRate = 0,
-	this.consumptionRate = 0,
 	this.kind = 'prey',
 	this.population = 0,
+	this.depletion = 0,
 	this.alive = []
 };
 
-var rabbit = new Life();
-var fox = new Life();
-var lion = new Life();
+var rabbit = new Species();
+var fox = new Species();
+var lion = new Species();
 var chart;
 
-
 Game = {
+	firstrun: true,
+	life: [],
 	cycleCount: 100,
 	boomCycle: 0,
 	cycle: function() {
@@ -26,7 +27,98 @@ Game = {
 		lion.alive.push(parseInt(Math.max(2, lion.population)));
 	},
 	dynamicCycle: function() {
+		//work out overall growth rate modifier for the prey
 
+
+		//work out overall growth rate modifier for predator
+	},
+	calcPrey: function(prey) {
+		//first calculate our prey growth
+		prey.population = (prey.population + ((prey.population * prey.growthRate))); // * Math.random(1, 1.1)));
+		//now calculate our predators hit on the population
+		$.each(this.life, function(predator) {
+			if (predator.kind != 'predator') return;
+
+			prey.population = prey.population - (predator.population * predator.growthRate * prey.population);
+		});
+
+		//now append this cycles final amount
+		prey.alive.push(prey.population);
+	},
+	calcPredator: function(predator) {
+		//calculate predator pop, based on available prey and other vars
+		console.log('pred growth', predator.population * predator.growthRate * this.calcTotalPreyPopulation());
+		console.log('pred depletion', predator.population * predator.depletion);
+		predator.population = predator.population + (predator.population * predator.growthRate * this.calcTotalPreyPopulation()) - (predator.population * predator.depletion);
+		predator.alive.push(predator.population);
+	},
+	calcTotalPreyPopulation: function(predator) {
+		var total = 0;
+		$.each(this.life, function(i, life) {
+			if (life.kind != 'prey') return;
+			total += life.population;
+		});
+
+		return total;
+	},
+	main: function() {
+		var self = this;
+		if (self.firstrun) {
+			self.init();
+			self.firstrun = false;
+		}
+
+		for (i=1;i < 100; i++) {
+			$.each(self.life, function(index, life) {
+				switch (life.kind) {
+					case 'prey':
+						self.calcPrey(life);
+						break;
+					case 'predator':
+						self.calcPredator(life);
+						break;
+				}
+			});
+		}
+		
+		self.render();
+	},
+	init: function() {
+		var prey = new Species();
+		prey.population = 100;
+		prey.growthRate = 0.02;
+
+		var predator = new Species();
+		predator.kind = 'predator';
+		predator.population = 40;
+		predator.growthRate = 0.0005;
+		predator.depletion = 0.05;
+
+		this.life.push(prey);
+		this.life.push(predator);
+	},
+	render: function() {
+		//setup our data array
+		var series = [];
+		$.each(this.life, function(i, l) {
+			series.push({
+				name: l.kind,
+				data: l.alive
+			});
+		});
+
+
+		chart = new Highcharts.Chart({
+			chart: {
+				renderTo: 'chart',
+				type: 'line'
+			},
+			title: {
+				text: 'predator prey model',
+				x: -30
+			},
+			series: series
+		});
 	}
 }
 
@@ -63,8 +155,6 @@ function run() {
 		Game.cycle();
 	}
 
-
-
 	chart = new Highcharts.Chart({
 		chart: {
 			renderTo: 'chart',
@@ -85,6 +175,10 @@ function run() {
 			data: lion.alive
 		}]
 	});
+}
+
+function runDynamic() {
+	Game.dynamicCycle();
 }
 
 function init() {
