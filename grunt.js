@@ -19,7 +19,7 @@ module.exports = function(grunt) {
     },
     concat: {
       dist: {
-        src: ['vendor/**/*.js', 'lib/**/*.js'],
+        src: ['lib/**/*.js'],
         dest: 'dist/<%= pkg.name %>.js'
       }
     },
