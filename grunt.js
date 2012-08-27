@@ -60,6 +60,6 @@ module.exports = function(grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', 'server watch');
+  grunt.registerTask('default', 'lint test concat server watch');
 
 };
