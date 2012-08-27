@@ -30,7 +30,7 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      files: ['index.html', '<config:concat.dist.src>'],
+      files: ['index.html', '<config:concat.dist.src>', '<config:test.files>'],
       tasks: 'lint test concat'
     },
     server: {},
