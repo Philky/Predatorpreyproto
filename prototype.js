@@ -3,6 +3,7 @@ function Species() {
 	this.kind = 'prey',
 	this.population = 0,
 	this.depletion = 0,
+	this.name = "",
 	this.alive = []
 };
 
@@ -34,41 +35,37 @@ Game = {
 	},
 	calcPrey: function(prey) {
 		//first calculate our prey growth
-		prey.population = (prey.population + ((prey.population * prey.growthRate))); // * Math.random(1, 1.1)));
+		prey.population = (prey.population + ((prey.population * prey.growthRate)) * Math.random(1, 1.1));
 		//now calculate our predators hit on the population
-		$.each(this.life, function(predator) {
+		$.each(this.life, function(index, predator) {
 			if (predator.kind != 'predator') return;
-
 			prey.population = prey.population - (predator.population * predator.growthRate * prey.population);
 		});
 
 		//now append this cycles final amount
 		prey.alive.push(prey.population);
 	},
-	calcPredator: function(predator) {
-		//calculate predator pop, based on available prey and other vars
-		console.log('pred growth', predator.population * predator.growthRate * this.calcTotalPreyPopulation());
-		console.log('pred depletion', predator.population * predator.depletion);
-		predator.population = predator.population + (predator.population * predator.growthRate * this.calcTotalPreyPopulation()) - (predator.population * predator.depletion);
-		predator.alive.push(predator.population);
-	},
-	calcTotalPreyPopulation: function(predator) {
+	calcTotalPopulationOfType: function(type) {
 		var total = 0;
 		$.each(this.life, function(i, life) {
-			if (life.kind != 'prey') return;
+			if (life.kind != type) return;
 			total += life.population;
 		});
 
 		return total;
 	},
+	calcPredator: function(predator) {
+		//calculate predator pop, based on available prey and other vars
+		predator.population = predator.population + (predator.population * predator.growthRate * this.calcTotalPopulationOfType('prey')) - (predator.population * predator.depletion);
+		predator.alive.push(predator.population);
+	},
 	main: function() {
 		var self = this;
-		if (self.firstrun) {
-			self.init();
-			self.firstrun = false;
-		}
 
-		for (i=1;i < 100; i++) {
+		self.init();
+
+
+		for (i=1;i < 10000; i++) {
 			$.each(self.life, function(index, life) {
 				switch (life.kind) {
 					case 'prey':
@@ -87,14 +84,23 @@ Game = {
 		var prey = new Species();
 		prey.population = 100;
 		prey.growthRate = 0.02;
+		prey.name = "prey 1";
+		this.life.push(prey);
+
+		var prey2 = new Species();
+		prey2.population = 100;
+		prey2.growthRate = 0.02;
+		prey2.name = "prey 2";
+		this.life.push(prey2);
 
 		var predator = new Species();
 		predator.kind = 'predator';
-		predator.population = 40;
+		predator.population = 50;
 		predator.growthRate = 0.0005;
 		predator.depletion = 0.05;
+		predator.name = "predator 1"
 
-		this.life.push(prey);
+		
 		this.life.push(predator);
 	},
 	render: function() {
@@ -102,7 +108,7 @@ Game = {
 		var series = [];
 		$.each(this.life, function(i, l) {
 			series.push({
-				name: l.kind,
+				name: l.name,
 				data: l.alive
 			});
 		});
