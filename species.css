@@ -1,0 +1,28 @@
+.addSpecies {
+	float:left;
+	width:300px;
+	border:1px solid green;
+	margin:5px;
+	padding:5px;
+}
+.speciesListContainer {
+	float:left;
+	width:700px;
+	border:1px solid brown;
+	margin:5px;
+	padding:0;
+}
+.speciesListContainer h3 {
+	margin-left:5px;
+}
+.species {
+	float:left;
+	width:100px;
+	border:1px solid black;
+	margin:5px;
+	padding:5px;
+}
+.species p {
+	margin:2px;
+	padding:0;
+}
